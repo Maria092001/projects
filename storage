@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta>
+    </meta>
+    </head>
+<body>
+<form action="#" onsubmit="onsignup(event)">
+    <label>Name</label>
+    <input type="text" name="username" required/>
+    <label>Email</label>
+    <input type="email" name="email" required/>
+    <label>Password</label>
+    <input type="password" name="password" required/>
+    <button>Sign Up</button>
+</form>
+</body>
+</html>
+
+<script type="text/javascript">
+let obj={
+username:"Ankita09",
+email:ankita09@gmail.com,
+password:Teddy 
+};
+let obj_serialized=JSON.stringify(obj);
+localStorage.setItem("obj",obj_serialized);
+let obj_deserialized=JSON.parse(localStorage.getItem("obj"));
+console.log(obj_deserialized);
+</script>
