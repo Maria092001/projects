@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta>
+    </meta>
+    </head>
+<body>
+<form action="#" onsubmit="onsignup(event)">
+    <label>Name</label>
+    <input type="text" name="username" required/>
+    <label>Email</label>
+    <input type="email" name="email" required/>
+    <label>Password</label>
+    <input type="password" name="password" required/>
+    <button>Sign Up</button>
+</form>
+</body>
+</html>
+
+     function onsignup(event){
+        event.preventDefault();
+        console.log(event.target.username.value)
+     }
+const username = document.getElementById("name").value;
+const email = document.getElementById("email").value;
+const password= document.getElementById("password").value;
+
+// Create a new object to store the user data.
+const user = {
+    username,
+  email,
+age,
+};
+const userString = JSON.stringify(user);
+
+localStorage.setItem("user", userString);7
