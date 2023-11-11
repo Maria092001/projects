@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta>
+    </meta>
+    </head>
+<body>
+<form action="#" onsubmit="onsignup(event)">
+    <label>Name</label>
+    <input type="text" name="username" required/>
+    <label>Email</label>
+    <input type="email" name="email" required/>
+    <label>Password</label>
+    <input type="password" name="password" required/>
+    <button>Sign Up</button>
+</form>
+</body>
+</html>
+
+<script type="text/javascript">
+let obj=[];
+let users = JSON.parse(localStorage.getItem('obj')) || [];
+function loadData(key, def) {
+    var data = localStorage.getItem(key);
+    return null == data ? def : JSON.parse(data)
+} let users = loadData('list', []);
+
+</script>
