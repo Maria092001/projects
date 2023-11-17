@@ -1,0 +1,54 @@
+const createPost = (post) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Post created:', post);
+      resolve(post);
+    }, 1000);
+  });
+};
+const updateLastUserActivityTime = () => {
+  return new Promise((resolve) => {
+
+    setTimeout(() => {
+      const lastActivityTime = new Date();
+      console.log('Last Activity Time updated:', lastActivityTime);
+      resolve(lastActivityTime);
+    }, 1000);
+  });
+};
+
+const deletePost = (postId) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Post deleted:', postId);
+      resolve();
+    }, 1000);
+  });
+};
+
+const user = {
+  id: 1,
+  name: 'John Doe',
+};
+
+const postContent = 'This is a new post!';
+
+createPost(postContent)
+  .then((createdPost) => {
+   
+    return updateLastUserActivityTime().then((lastActivityTime) => ({
+      post: createdPost,
+      lastActivityTime: lastActivityTime,
+    }));
+  })
+  .then(({ post, lastActivityTime }) => {
+    console.log('All Posts:', [post]);
+    console.log('Last Activity Time:', lastActivityTime);
+
+    return deletePost(post.id).then(() => {
+      console.log('Post deleted successfully.');
+    });
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
