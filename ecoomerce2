@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
+
+    <title>E-Commerce</title>
+</head>
+<body>
+    <div class="container my-5">
+        <h2 class="text-center">Maria (Admin Page)</h2>
+        <form id="store-form">
+            <div class="form-group">
+                <label for="price">SELLING PRICE</label>
+                <input type="number" class="form-control" id="price" placeholder="Enter amount">
+            </div>
+            <div class="form-group my-3">
+                <label for="name">PRODUCT NAME</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter product name">
+            </div>
+            <button type="submit" class="btn btn-primary my-3">ADD PRODUCT</button>
+        </form>
+        <h3 class="text-left"> <span id="total-worth">Rs 0</span></h3>
+        <table class="table my-3">
+            <thead>
+                <tr>
+                    <th scope="col">S.NO</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="product-list">
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        let productDetails = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            axios.get('https://crudcrud.com/api/e69e441b79544c2fb51cdcd62aea68aa/ecommerce')
+                .then(response => {
+                    productDetails = response.data;
+                    console.log('Retrieved product details', productDetails);
+                    displayData(productDetails);
+                })
+                .catch(error => console.error('Error fetching product details:', error));
+        });
+
+        function displayData(products) {
+            const totalWorth = products.reduce((sum, product) => sum + product.price, 0);
+            const totalWorthElement = document.querySelector('#total-worth');
+            totalWorthElement.innerText = `Total Worth of Products: Rs ${totalWorth.toFixed(2)}`;
+
+            const productList = document.querySelector('#product-list');
+            productList.innerHTML = '';
+
+            products.forEach((product, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${product.name}</td>
+                    <td>Rs ${product.price.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteProduct('${product._id}')">Delete</button>
+                        <button class="btn btn-primary" onclick="editProduct('${product._id}', '${product.name}', ${product.price})">Edit</button>
+                    </td>
+                `;
+                productList.appendChild(row);
+            });
+        }
+
+        function addProduct(event) {
+            event.preventDefault();
+
+            const priceElement = document.querySelector('#price');
+            const nameElement = document.querySelector('#name');
+
+            const price = parseFloat(priceElement.value);
+            const name = nameElement.value.trim();
+
+            if (!price || !name) {
+                alert('Please enter valid price and product name');
+                return;
+            }
+
+            const newProduct = { price, name };
+            axios.post('https://crudcrud.com/api/e69e441b79544c2fb51cdcd62aea68aa/ecommerce', newProduct)
+                .then(response => {
+                    console.log('Added new product', response.data);
+                    productDetails.push(response.data);
+                    displayData(productDetails);
+                    updateTotalWorth(); // Update total worth after adding a new product
+                })
+                .catch(error => console.error('Error adding product:', error));
+
+            priceElement.value = '';
+            nameElement.value = '';
+        }
+
+        function deleteProduct(productId) {
+            axios.delete(`https://crudcrud.com/api/e69e441b79544c2fb51cdcd62aea68aa/ecommerce/${productId}`)
+                .then(response => {
+                    console.log('Deleted product', response.data);
+                    productDetails = productDetails.filter(product => product._id !== productId);
+                    displayData(productDetails);
+                    updateTotalWorth(); // Update total worth after deleting a product
+                })
+                .catch(error => console.error('Error deleting product:', error));
+        }
+
+        function updateTotalWorth() {
+            const totalWorth = productDetails.reduce((sum, product) => sum + product.price, 0);
+            const totalWorthElement = document.querySelector('#total-worth');
+            totalWorthElement.innerText = `Total Worth of Products: Rs ${totalWorth.toFixed(2)}`;
+        }
+
+        const formElement = document.querySelector('#store-form');
+        formElement.addEventListener('submit', addProduct);
+
+    </script>
+</body>
+</html>
